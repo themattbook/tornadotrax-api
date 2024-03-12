@@ -12,7 +12,9 @@ export class TornadoController {
   }
 
   @Get()
-  findAll(@Query() query: any): Promise<any[]> {
-    return this.tornadoService.findAll(query);
+  async findAll(
+    @Query() query: any,
+  ): Promise<{ data: Tornado[]; total_entries: number; timestamp: Date }> {
+    return await this.tornadoService.findAll(query);
   }
 }

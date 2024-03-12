@@ -3,6 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, FindOptionsWhere } from 'typeorm';
 import { Tornado } from './tornado.entity';
 
+interface FindAllTornadoResponse {
+  data: Tornado[];
+  total_entries: number;
+  timestamp: Date;
+}
+
 @Injectable()
 export class TornadoService {
   constructor(
@@ -18,7 +24,7 @@ export class TornadoService {
     }
   }
 
-  async findAll(query: any): Promise<Tornado[]> {
+  async findAll(query: any): Promise<FindAllTornadoResponse> {
     const where: FindOptionsWhere<Tornado> = {};
     // State
     if (query.state) {
@@ -55,6 +61,10 @@ export class TornadoService {
       where['date'] = Between(query.startDate, query.endDate);
     }
 
-    return this.tornadoRepository.find({ where });
+    const data = await this.tornadoRepository.find({ where });
+    const total_entries = await this.tornadoRepository.count({ where });
+    const timestamp = new Date(); // Current timestamp
+
+    return { data, total_entries, timestamp };
   }
 }
