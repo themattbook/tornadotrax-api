@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between, FindOptionsWhere } from 'typeorm';
+import { Repository, Between, In, FindOptionsWhere } from 'typeorm';
 import { Tornado } from './tornado.entity';
 
 interface FindAllTornadoResponse {
@@ -26,9 +26,17 @@ export class TornadoService {
 
   async findAll(query: any): Promise<FindAllTornadoResponse> {
     const where: FindOptionsWhere<Tornado> = {};
-    // State
+
+    // Handle both single and multiple states
     if (query.state) {
-      where['st'] = query.state;
+      // Check if `state` query parameter contains comma, indicating multiple states
+      if (query.state.includes(',')) {
+        // Split the `state` query by commas and trim spaces
+        const states = query.state.split(',').map((s: string) => s.trim());
+        where['st'] = In(states); // Use the `In` operator for multiple values
+      } else {
+        where['st'] = query.state; // Single state, direct assignment
+      }
     }
 
     // Day
