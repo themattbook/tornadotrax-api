@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  nestjs-api:
+    build: .
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mysql-db
+    environment:
+      DATABASE_HOST: mysql-db
+      DATABASE_PORT: 3306
+      DATABASE_USERNAME: tornadotrax
+      DATABASE_PASSWORD: '$W&2Tr$cuWYY9X'
+      DATABASE_NAME: tornado_data
+
+  mysql-db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: tornado_data
+      MYSQL_USER: tornadotrax
+      MYSQL_PASSWORD: '$W&2Tr$cuWYY9X'
+    ports:
+      - '33061:3306'
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
