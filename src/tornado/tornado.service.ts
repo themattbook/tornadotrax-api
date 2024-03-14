@@ -39,22 +39,19 @@ export class TornadoService {
       }
     }
 
-    // Day
     if (query.day) {
       where['dy'] = query.day;
     }
 
-    // Year
     if (query.year) {
       where['yr'] = query.year;
     }
 
-    // Month
     if (query.month) {
       where['mo'] = query.month;
     }
 
-    // Magnitude
+    // EF-Rating
     if (query.mag) {
       where['mag'] = query.mag;
     }
